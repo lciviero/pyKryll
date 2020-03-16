@@ -91,7 +91,7 @@ class KryllApi:
     def connect(self):
         """Connect to Kryll api"""
         if self.connected:
-            return True
+            return
 
         auth_body = {"email": self._api_user,
                      "password": self._api_pass,
@@ -116,7 +116,7 @@ class KryllApi:
         """
         res = self._send_request("users/me/wallet?force=true")
         if res.status_code != 200:
-            return list()
+            return KryllWallet()
 
         tmp = json.loads(res.text)
 
