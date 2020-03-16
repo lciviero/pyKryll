@@ -3,7 +3,10 @@
 
 import requests
 import json
-from .KryllCoin import KryllCoin
+from typing import Union
+
+from .KryllWallet import KryllWallet
+from .KryllCrypto import KryllCrypto
 
 
 def api_connexion_needed(method):
@@ -12,7 +15,7 @@ def api_connexion_needed(method):
         if not self.connected:
             self.connect()
 
-        method(self, *arg, **kargs)
+        return method(self, *arg, **kargs)
 
     return wraper
 
@@ -38,12 +41,16 @@ class KryllApi:
         if not api_url.endswith("/"):
             api_url += "/"
 
-        self._api_url = api_url
-        self._api_user = api_user
-        self._api_pass = api_pass
-        self._api_2fa = api_2fa
-        self._token = str()
-        self._connected = False
+        self._api_url = api_url         # url of the Kryll api endpoint
+        self._api_user = api_user       # api user
+        self._api_pass = api_pass       # api password
+        self._api_2fa = api_2fa         # api 2 factor authentification code
+        self._token = str()             # api authentification token
+        self._connected = False         # are we connected to the api
+
+    @property
+    def connected(self):
+        return self._connected
 
     def _send_request(self, url: str, method: str = "GET", headers: dict = None, data: dict = None):
         """send a request to the api
@@ -101,10 +108,12 @@ class KryllApi:
 
         tmp = json.loads(res.text)
         self._token = tmp["data"]["auth_token"]
+        self._connected = True
 
     @api_connexion_needed
-    def get_wallet_detail(self) -> list:
-        """return à list of KryllCoin object representing each coin in the wallet"""
+    def get_wallet_detail(self) -> KryllWallet:
+        """Return à list of KryllCoin object representing each coin in the wallet
+        """
         res = self._send_request("users/me/wallet?force=true")
         if res.status_code != 200:
             return list()
@@ -112,33 +121,49 @@ class KryllApi:
         tmp = json.loads(res.text)
 
         # parsing data for wallet detail
-        wallet = list()
-        for balance in tmp["data"]["balance"].keys():
-            for currency in tmp["data"]["balance"][balance]:
-                # adding coin to the list
-                wallet.append(KryllCoin(currency["currency"], balance, currency["locked"],
-                                        currency["available"], currency["free"]))
+        wallet = KryllWallet()
+        for balance, lst in tmp["data"]["balance"].items():
+            for curr in lst:
+                tmp = KryllCrypto(curr["currency"], curr["locked"], curr["available"], curr["free"])
+                wallet.add_crypto(balance, tmp)
 
         return wallet
 
     @api_connexion_needed
-    def get_rates_for_currencies(self, fsyms: set, tsyms: set):
-        """Refresh rates from Kryll API
+    def get_rates_for_currencies(self, fsyms: Union[set, list, str], tsyms: Union[set, list, str]):
+        """Refresh rates from Kryll API, seems to always include USB
 
         Args:
-            fsyms: coins to retreive price details for.
-            tsyms: how price should be reported for fsyms. Default USD
+            fsyms (set, str): coins to retreive price details for.
+            tsyms (set, str): how price should be reported for fsyms.
         """
+
+        # Dealing with differents parameters type
+        # We use set to avoid duplicate value
+        # converting str to set
+        if isinstance(fsyms, str):
+            fsyms = set([fsyms])
+        if isinstance(tsyms, str):
+            tsyms = set([tsyms])
+        # converting list to set
+        if isinstance(fsyms, list):
+            fsyms = set([fsyms])
+        if isinstance(tsyms, list):
+            tsyms = set([tsyms])
+
+        # we need to send list for json conversion
+        fsyms = list(fsyms)
+        tsyms = list(tsyms)
+
         headers = dict()
         headers["fsyms"] = fsyms
         headers["tsyms"] = tsyms
 
         res = self._send_request("exchanges/rates", "POST", data=headers)
         if res.status_code != 200:
-            return
+            return {}
 
         tmp = json.loads(res.text)
 
-    @property
-    def connected(self):
-        return self._connected
+        return tmp["data"]
+

@@ -2,27 +2,25 @@
 """Module defining KryllCoin class"""
 
 
-class KryllCoin:
+class KryllCrypto:
     """Class representing à Kryll cryptocurrency"""
 
-    def __init__(self, currency, platform, locked=0.00, available=0.00, free=0.00):
+    def __init__(self, currency, locked=0.00, available=0.00, free=0.00):
         """Instanciate a KryllCoin object
 
         Args:
             currency: currency code
-            platform: platform of the coin
             locked: amount of coin locked by Kryll
             available: available amount of coin
             free: free amount of coin
         """
         self._currency = currency
-        self._platform = platform
         self._locked = locked
         self._available = available
         self._free = free
 
     def __repr__(self):
-        return "{}({})".format(self._currency, self._platform)
+        return "{}({})".format(self._currency, self.total)
 
     @property
     def currency(self):
