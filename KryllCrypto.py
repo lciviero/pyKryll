@@ -17,9 +17,9 @@ class KryllCrypto:
             free: free amount of coin
         """
         self._currency = currency
-        self._locked = locked
-        self._available = available
-        self._free = free
+        self._locked = float(locked)
+        self._available = float(available)
+        self._free = float(free)
 
     def __repr__(self):
         return "{}({})".format(self._currency, self.total)
