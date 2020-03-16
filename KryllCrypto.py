@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Module defining KryllCoin class"""
 
+from typing import Union
+
 
 class KryllCrypto:
     """Class representing à Kryll cryptocurrency"""
@@ -27,29 +29,29 @@ class KryllCrypto:
         return self._currency
 
     @property
-    def locked(self):
+    def locked(self) -> float:
         return self._locked
 
     @locked.setter
-    def locked(self, value):
+    def locked(self, value: Union[int, float]):
         self.locked = float(value)
 
     @property
-    def available(self):
+    def available(self) -> float:
         return self._available
 
     @available.setter
-    def available(self, value):
+    def available(self, value: Union[int, float]) -> float:
         self._available = float(value)
 
     @property
-    def free(self):
+    def free(self) -> float:
         return self._free
 
     @free.setter
-    def free(self, value):
+    def free(self, value: Union[int, float]):
         self._free = float(value)
 
     @property
-    def total(self):
+    def total(self) -> float:
         return self._locked + self._available + self._free
