@@ -7,7 +7,7 @@ from typing import Union
 class KryllCrypto:
     """Class representing à Kryll cryptocurrency"""
 
-    def __init__(self, currency, locked=0.00, available=0.00, free=0.00):
+    def __init__(self, currency, locked=0.00, available=0.00, free=0.00, total=0.00):
         """Instanciate a KryllCoin object
 
         Args:
@@ -20,6 +20,7 @@ class KryllCrypto:
         self._locked = float(locked)
         self._available = float(available)
         self._free = float(free)
+        self._total = float(total)
 
     def __repr__(self):
         return "{}({})".format(self._currency, self.total)
@@ -41,7 +42,7 @@ class KryllCrypto:
         return self._available
 
     @available.setter
-    def available(self, value: Union[int, float]) -> float:
+    def available(self, value: Union[int, float]):
         self._available = float(value)
 
     @property
@@ -54,4 +55,8 @@ class KryllCrypto:
 
     @property
     def total(self) -> float:
-        return self._locked + self._available + self._free
+        return self._total
+
+    @total.setter
+    def total(self, value: Union[int, float]):
+        self._total = float(value)
