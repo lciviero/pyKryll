@@ -12,6 +12,14 @@ class KryllWallet:
     def __init__(self):
         self._platform = defaultdict(list)     # dictionary of cryptos held on a platform
 
+    def __repr__(self):
+        return str(self._platform)
+
+    def __iter__(self):
+        for platform in self._platform:
+            for curr in self._platform[platform]:
+                yield platform, curr
+
     def add_crypto(self, platform: str, crypto: KryllCrypto):
         """Add a KryllCrypto object to the wallet
 
