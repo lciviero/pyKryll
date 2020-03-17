@@ -124,7 +124,7 @@ class KryllApi:
         wallet = KryllWallet()
         for balance, lst in tmp["data"]["balance"].items():
             for curr in lst:
-                tmp = KryllCrypto(curr["currency"], curr["locked"], curr["available"], curr["free"])
+                tmp = KryllCrypto(curr["currency"], curr["locked"], curr["available"], curr["free"], curr["total"])
                 wallet.add_crypto(balance, tmp)
 
         return wallet
