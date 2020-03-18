@@ -48,6 +48,7 @@ class KryllApi:
         self._api_2fa = api_2fa         # api 2 factor authentification code
         self._token = str()             # api authentification token
         self._connected = False         # are we connected to the api
+        self._account = None            # Kryll account informations
 
     @property
     def connected(self):
@@ -110,6 +111,9 @@ class KryllApi:
         tmp = json.loads(res.text)
         self._token = tmp["data"]["auth_token"]
         self._connected = True
+
+        # Instanciating account
+        self._account = KryllAccount(tmp["data"])
 
     @api_connexion_needed
     def get_wallet_detail(self) -> KryllWallet:
