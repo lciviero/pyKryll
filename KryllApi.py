@@ -172,3 +172,6 @@ class KryllApi:
 
         return tmp["data"]
 
+    @property
+    def account(self) -> KryllAccount:
+        return self._account
