@@ -7,6 +7,7 @@ from typing import Union
 
 from .KryllWallet import KryllWallet
 from .KryllCrypto import KryllCrypto
+from .KryllAccount import KryllAccount
 
 
 def api_connexion_needed(method):

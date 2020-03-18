@@ -5,7 +5,7 @@ import json
 from typing import Union
 
 
-class KrillAccount:
+class KryllAccount:
     """Class representing a Krill account"""
     def __init__(self, json_datas: Union[str, json]):
         """
