@@ -142,14 +142,14 @@ class KryllApi:
         # We use set to avoid duplicate value
         # converting str to set
         if isinstance(fsyms, str):
-            fsyms = set([fsyms])
+            fsyms = {fsyms}
         if isinstance(tsyms, str):
-            tsyms = set([tsyms])
+            tsyms = {tsyms}
         # converting list to set
         if isinstance(fsyms, list):
-            fsyms = set([fsyms])
+            fsyms = {fsyms}
         if isinstance(tsyms, list):
-            tsyms = set([tsyms])
+            tsyms = {tsyms}
 
         # we need to send list for json conversion
         fsyms = list(fsyms)
