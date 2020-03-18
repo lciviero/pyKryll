@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """Module defining KryllAccount class"""
 
-from typing import Union
-
 
 class KryllAccount:
     """Class representing a Krill account"""
